@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Date;
+
 @Getter
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -15,5 +17,5 @@ public class ExtUser {
     private String location;
     private String email;
     private String htmlUrl;
-    private String createdAt;
+    private Date createdAt;
 }
