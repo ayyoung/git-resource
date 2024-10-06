@@ -8,7 +8,7 @@ import young.ariel.gitresource.ext.dto.ExtUser;
 
 import java.util.List;
 
-@FeignClient(url="https://api.github.com")
+@FeignClient(value="git", url="https://api.github.com")
 public interface GitClient {
     @GetMapping("/users/{user}")
     ExtUser getUserData(@PathVariable String user);
