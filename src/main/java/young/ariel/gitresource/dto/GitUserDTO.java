@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GitUserDTO {
@@ -22,6 +20,6 @@ public class GitUserDTO {
     private String geoLocation;
     private String email;
     private String url;
-    private Date createdAt;
+    private String createdAt;
     private List<GitRepoDTO> repos;
 }
