@@ -49,15 +49,15 @@ class GitResourceServiceTest {
         String repoName = "TestRepo$" + randomGen.nextDouble();
         userName = "TestUser$" + randomGen.nextDouble();
         when(client.getUserRepos(anyString())).thenReturn(
-                ResponseEntity.of(Optional.of(List.of(
+                List.of(
                         ExtRepo.builder()
                                 .name(repoName)
                                 .htmlUrl("https://example.com/" + userName)
                                 .build()
-                )))
+                )
         );
 
-        when(client.getUserData(anyString())).thenReturn(
+        when(client.fetchUserData(anyString())).thenReturn(
                 ResponseEntity.of(
                         Optional.of(
                                 ExtUser.builder()
@@ -79,12 +79,12 @@ class GitResourceServiceTest {
         GitUserDTO returnValue = service.getDataByUsername(userName);
         ObjectMapper mapper = new ObjectMapper();
         String returnResponse = mapper.writeValueAsString(returnValue);
-        for (String expectedUserHeader : expectedUserHeaders) {
+        for (String expectedUserHeader: expectedUserHeaders) {
             assertTrue(returnResponse.contains(expectedUserHeader));
         }
 
         String repos = mapper.writeValueAsString(returnValue.getRepos());
-        for (String header : expectedRepoHeaders) {
+        for (String header: expectedRepoHeaders) {
             assertTrue(repos.contains(header));
         }
     }

@@ -1,6 +1,5 @@
 package young.ariel.gitresource.service;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import young.ariel.gitresource.dto.GitRepoDTO;
@@ -33,8 +32,8 @@ public class GitResourceService {
         return null;
     }
 
-    private GitUserDTO getProfileDataForUser(String username) throws RuntimeException {
-        ResponseEntity<ExtUser> userResponse = this.gitClient.getUserData(username);
+    public GitUserDTO getProfileDataForUser(String username) throws RuntimeException {
+        ResponseEntity<ExtUser> userResponse = this.gitClient.fetchUserData(username);
         if (userResponse.getStatusCode().is2xxSuccessful() && userResponse.getBody() != null) {
             ExtUser user = userResponse.getBody();
             return GitUserDTO.builder()
@@ -50,14 +49,9 @@ public class GitResourceService {
         return null;
     }
 
-    @Cacheable(value="repos", unless="#result == null")
-    private List<GitRepoDTO> getReposForUser(String username) throws RuntimeException {
-        ResponseEntity<List<ExtRepo>> userRepos = this.gitClient.getUserRepos(username);
-        if (userRepos.getStatusCode().is2xxSuccessful() && userRepos.getBody() != null) {
-            return userRepos.getBody().stream().map(
-                    extRepo -> new GitRepoDTO(extRepo.getName(), extRepo.getHtmlUrl())
-            ).collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+    public List<GitRepoDTO> getReposForUser(String username) throws RuntimeException {
+        return this.gitClient.getUserRepos(username).stream().map(
+                repo -> new GitRepoDTO(repo.getName(), repo.getHtmlUrl())
+        ).collect(Collectors.toList());
     }
 }

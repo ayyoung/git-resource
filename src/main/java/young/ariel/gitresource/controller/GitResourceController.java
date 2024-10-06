@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import young.ariel.gitresource.service.GitResourceService;
 
-@RestController("/api")
+@RestController()
 public class GitResourceController {
     private final GitResourceService service;
 
@@ -21,7 +21,7 @@ public class GitResourceController {
         return ResponseEntity.ok("Please provide a username to fetch git data.");
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/api/{username}")
     public ResponseEntity<?> getDataForUser(@PathVariable String username) {
         try {
             return ResponseEntity.ofNullable(this.service.getDataByUsername(username));
