@@ -1,5 +1,6 @@
 package young.ariel.gitresource.service;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import young.ariel.gitresource.dto.GitRepoDTO;
@@ -23,7 +24,7 @@ public class GitResourceService {
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
-    public GitUserDTO getDataByUsername(String username) throws RuntimeException{
+    public GitUserDTO getDataByUsername(String username) throws RuntimeException {
         GitUserDTO userDTO = this.getProfileDataForUser(username);
         if (userDTO != null) {
             userDTO.setRepos(this.getReposForUser(username));
@@ -49,7 +50,8 @@ public class GitResourceService {
         return null;
     }
 
-    private List<GitRepoDTO> getReposForUser(String username) throws RuntimeException{
+    @Cacheable(value="repos", unless="#result == null")
+    private List<GitRepoDTO> getReposForUser(String username) throws RuntimeException {
         ResponseEntity<List<ExtRepo>> userRepos = this.gitClient.getUserRepos(username);
         if (userRepos.getStatusCode().is2xxSuccessful() && userRepos.getBody() != null) {
             return userRepos.getBody().stream().map(
